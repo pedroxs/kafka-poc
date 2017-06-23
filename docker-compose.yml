@@ -1,0 +1,37 @@
+version: '2'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092"
+    links:
+      - zookeeper
+    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: 171.171.0.1
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  app:
+    image: openjdk:8u131-jre-alpine
+    links:
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    volumes:
+      - ./target/kafka-poc-0.0.1-SNAPSHOT.jar:/app.jar
+    command: java -jar /app.jar
+
+networks:
+  default:
+    ipam:
+      config:
+      - subnet: 171.171.0.0/26
+        gateway: 171.171.0.1

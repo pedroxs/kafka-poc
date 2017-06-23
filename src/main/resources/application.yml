@@ -1,0 +1,12 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: foo
+      auto-offset-reset: earliest
+
+---
+spring:
+  profiles: docker
+  kafka:
+    bootstrap-servers: kafka:9092
