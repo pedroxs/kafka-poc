@@ -19,15 +19,29 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+  kafka-create-topic:
+    image: wurstmeister/kafka
+    links:
+      - zookeeper
+      - kafka
+    environment:
+      HOST_IP: 171.171.0.1
+      ZK: 171.171.0.1:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: sh -c 'sleep 5; $$KAFKA_HOME/bin/kafka-topics.sh --create --topic myTopic --partitions 2 --zookeeper $$ZK --replication-factor 1'
+
   app:
     image: openjdk:8u131-jre-alpine
     links:
       - kafka
+    depends_on:
+      - kafka-create-topic
     environment:
       SPRING_PROFILES_ACTIVE: docker
     volumes:
       - ./target/kafka-poc-0.0.1-SNAPSHOT.jar:/app.jar
-    command: java -jar /app.jar
+    command: sh -c 'sleep 10; java -jar /app.jar'
 
 networks:
   default:

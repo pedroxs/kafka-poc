@@ -6,8 +6,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Random;
 
 /**
@@ -26,6 +28,6 @@ public class KafkaMessageProducer {
     public void send() {
         int partition = random.nextInt(2);
         log.info("Sending message to partition: {}", partition);
-        template.send("myTopic", partition, ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        template.send("myTopic", partition, ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
     }
 }

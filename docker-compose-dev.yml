@@ -18,6 +18,18 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+  kafka-create-topic:
+    image: wurstmeister/kafka
+    links:
+      - zookeeper
+      - kafka
+    environment:
+      HOST_IP: 171.171.0.1
+      ZK: 171.171.0.1:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: sh -c 'sleep 5; $$KAFKA_HOME/bin/kafka-topics.sh --create --topic myTopic --partitions 2 --zookeeper $$ZK --replication-factor 1'
+
 networks:
   default:
     ipam:
