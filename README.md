@@ -69,7 +69,9 @@ Start a console consumer (from another shell instance):
 
     > $KAFKA_HOME/bin/kafka-console-consumer.sh --topic=topic --zookeeper=$ZK
     
+---
 
+Thanks to [https://github.com/wurstmeister/kafka-docker](https://github.com/wurstmeister/kafka-docker) for the amazing docker images and tutorial.
     
 [Kafka]: https://kafka.apache.org/
 [Spring]: https://projects.spring.io/spring-kafka/
